@@ -1,18 +1,22 @@
 import {useState, useEffect} from 'react';
 
+function ExampleChild() {
+
+  useEffect(() => {
+    console.log('Subscribing...');
+    return () => {
+      console.log('Unsubscribing...')
+    };  
+  },[])  // if adding {,[]) here, then it will not console.log anything, except if there a condition below for <ExampleChild>
+  // there is no ,[], then it will run console.log('subscribing..), then run the console.log('Unsubscribing) after return
+  return (
+    <h2> I am the example child</h2>
+  )
+}
+
 function App () {
   const [color, setColor] = useState('red');
   const [msg, setMsg] = useState('first message');
-
-  useEffect(() => {
-    console.log(msg);
-  }, [msg]) // only when msg changes, it will console.log(msg), but it will always run the first time when the site is loaded
-  // if there is no [msg], then it will console.log every time when click on any button
-  // if change to [msg,color], then it will console.log every time when click on any button, same as if there is no 2nd parameter at all
-
-  useEffect(() => {
-    console.log('mount');
-  }, [])
 
   function changeColor() {  // here we have to use function handleClick(), in the class component we can just use handleClick(), but not for function component
     color === 'red'
@@ -30,6 +34,8 @@ function App () {
        <h1> {msg} </h1>
       <button onClick={changeColor}>Click me to change color</button>  
       <button onClick={changeMsg}>Click me to change msg</button>  
+      {msg === 'first message' && <ExampleChild /> }  
+      {/* setup a condition, if msg is first message, then it will return console.log('unsubscribing...'), if no this msg condition, it will console.log nothing */}
      
     </div>
   )
